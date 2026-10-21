@@ -61,6 +61,8 @@ class HooksConfigTests(unittest.TestCase):
                 "CODEX_LOGFIRE_CONFIG_FILE": str(config),
                 "CODEX_LOGFIRE_PYTHON": sys.executable,
                 "CODEX_LOGFIRE_DEBUG": "true",
+                "PYTHONIOENCODING": "cp949:surrogateescape",
+                "PYTHONUTF8": "0",
             })
             for shell in ("powershell.exe", "cmd.exe"):
                 state = plugin_root / shell
@@ -78,18 +80,23 @@ class HooksConfigTests(unittest.TestCase):
                                 "hook_event_name": event,
                                 "session_id": "windows-shell-test",
                                 "turn_id": "turn-1",
-                            }),
+                                "prompt": "테스트 안녕 🙂",
+                                "last_assistant_message": "한글 응답 👋",
+                            }, ensure_ascii=False).encode("utf-8"),
                             capture_output=True,
-                            text=True,
                             env=env,
                             timeout=10,
                         )
                         self.assertEqual(result.returncode, 0, result.stderr)
                         log = state / "logs" / "logfire-exporter.log"
                         self.assertTrue(log.is_file(), "the Python hook did not run")
-                        self.assertIn(f"dispatch event={event!r}", log.read_text(encoding="utf-8"))
+                        diagnostics = log.read_text(encoding="utf-8")
+                        self.assertIn(f"dispatch event={event!r}", diagnostics)
+                        self.assertNotIn("hook failed open", diagnostics)
                         if event == "UserPromptSubmit":
-                            self.assertEqual(len(list((state / "turns").glob("*.json"))), 1)
+                            turns = list((state / "turns").glob("*.json"))
+                            self.assertEqual(len(turns), 1)
+                            self.assertEqual(json.loads(turns[0].read_text(encoding="utf-8"))["prompt"], "테스트 안녕 🙂")
                 self.assertFalse(list((state / "turns").glob("*.json")))
 
     def test_windows_launcher_runs_real_hook_and_fails_open(self) -> None:

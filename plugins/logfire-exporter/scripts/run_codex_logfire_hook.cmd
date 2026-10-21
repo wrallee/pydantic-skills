@@ -1,5 +1,6 @@
 @echo off
 setlocal
+set "PYTHONIOENCODING=utf-8"
 
 rem Windows keeps the original direct-Python behavior. Interpreter failures
 rem fail open because telemetry must never block or break a Codex turn.
