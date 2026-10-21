@@ -1,0 +1,27 @@
+name: Logfire Exporter
+
+on:
+  push:
+    branches: ['main-v*']
+  pull_request:
+    paths:
+      - plugins/logfire-exporter/**
+      - .github/workflows/logfire-exporter.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5a  # v4.3.1
+        with:
+          persist-credentials: false
+      - name: Test Logfire exporter
+        run: python -m unittest discover -s plugins/logfire-exporter/tests -v

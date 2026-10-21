@@ -1,5 +1,37 @@
 # Pydantic Skills
 
+## Windows fork
+
+This fork of [pydantic/skills](https://github.com/pydantic/skills) keeps the Windows
+Logfire Exporter fix on the default branch, `main-v0.2.0`. Version `0.2.0-W001` runs
+the Windows launcher through `cmd.exe`, so Codex can invoke it from PowerShell
+as well as CMD. Other plugins and the POSIX launcher retain upstream behavior.
+
+To install this branch, use the following marketplace entry in `~/.codex/config.toml`:
+
+```toml
+[marketplaces.pydantic-skills]
+source_type = "git"
+source = "https://github.com/wrallee/pydantic-skills.git"
+ref = "main-v0.2.0"
+```
+
+Refresh the marketplace and reinstall Logfire Exporter, then review the changed
+hooks in `/hooks`. Keep credentials in the existing exporter configuration file.
+For later fork releases, preserve the upstream base version and increment the
+`W` suffix in `plugins/logfire-exporter/.codex-plugin/plugin.json`; Codex uses that
+version to distinguish cached plugin installations. Keep `main` aligned with upstream.
+
+CI runs the exporter suite on Windows and Linux. The Windows test checks both
+hook events through PowerShell and CMD, including plugin paths with spaces.
+Run the exporter suite locally with:
+
+```text
+python -m unittest discover -s plugins/logfire-exporter/tests -v
+```
+
+## Upstream overview
+
 Logfire, Pydantic AI, and Pydantic plugins for [Claude Code](https://claude.com/claude-code), [Codex](https://openai.com/codex), and [Cursor](https://cursor.com). Instrument your code with Logfire, query and export the resulting telemetry, build LLM agents with Pydantic AI, and validate data with Pydantic.
 
 ## Plugins

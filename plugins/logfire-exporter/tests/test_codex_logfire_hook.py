@@ -314,8 +314,9 @@ class HookTests(unittest.TestCase):
         server = HTTPServer(("127.0.0.1", 0), CaptureHandler)
         thread = threading.Thread(target=server.serve_forever, daemon=True)
         thread.start()
-        self.addCleanup(server.shutdown)
         self.addCleanup(server.server_close)
+        self.addCleanup(thread.join, 2)
+        self.addCleanup(server.shutdown)
         os.environ["LOGFIRE_TOKEN"] = "test-token"
         os.environ["LOGFIRE_URL"] = f"http://127.0.0.1:{server.server_port}"
         os.environ["CODEX_LOGFIRE_PROJECT"] = "acme/codex"
@@ -384,8 +385,9 @@ class HookTests(unittest.TestCase):
         server = HTTPServer(("127.0.0.1", 0), CaptureHandler)
         thread = threading.Thread(target=server.serve_forever, daemon=True)
         thread.start()
-        self.addCleanup(server.shutdown)
         self.addCleanup(server.server_close)
+        self.addCleanup(thread.join, 2)
+        self.addCleanup(server.shutdown)
         os.environ["LOGFIRE_TOKEN"] = "test-token"
         os.environ["LOGFIRE_URL"] = f"http://127.0.0.1:{server.server_port}"
         os.environ["CODEX_THREAD_ID"] = "thread-1"

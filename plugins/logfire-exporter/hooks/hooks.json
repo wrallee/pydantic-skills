@@ -6,7 +6,7 @@
           {
             "type": "command",
             "command": "sh \"${PLUGIN_ROOT:-${CLAUDE_PLUGIN_ROOT}}/scripts/run_codex_logfire_hook.sh\"",
-            "commandWindows": "call \"%PLUGIN_ROOT%\\scripts\\run_codex_logfire_hook.cmd\"",
+            "commandWindows": "cmd.exe /d /c call \"${PLUGIN_ROOT}\\scripts\\run_codex_logfire_hook.cmd\"",
             "timeout": 10
           }
         ]
@@ -18,7 +18,7 @@
           {
             "type": "command",
             "command": "sh \"${PLUGIN_ROOT:-${CLAUDE_PLUGIN_ROOT}}/scripts/run_codex_logfire_hook.sh\"",
-            "commandWindows": "call \"%PLUGIN_ROOT%\\scripts\\run_codex_logfire_hook.cmd\"",
+            "commandWindows": "cmd.exe /d /c call \"${PLUGIN_ROOT}\\scripts\\run_codex_logfire_hook.cmd\"",
             "timeout": 30
           }
         ]
